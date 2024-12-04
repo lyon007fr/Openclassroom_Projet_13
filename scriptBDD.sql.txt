@@ -1,0 +1,99 @@
+CREATE TABLE Currencies (
+    id INT PRIMARY KEY,
+    code VARCHAR(10),
+    rate_to_base DECIMAL(10, 2)
+);
+
+CREATE TABLE Categories (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    acriss_code VARCHAR(10),
+    description TEXT
+);
+
+CREATE TABLE Agencies (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    city VARCHAR(50),
+    country VARCHAR(50),
+    contact_info TEXT,
+    working_hours TEXT
+);
+
+CREATE TABLE Cars (
+    id INT PRIMARY KEY,
+    make VARCHAR(50),
+    model VARCHAR(50),
+    fuel_type VARCHAR(20),
+    transmission VARCHAR(20),
+    category_id INT,
+    availability_status BOOLEAN,
+    FOREIGN KEY (category_id) REFERENCES Categories(id)
+);
+
+CREATE TABLE Users (
+    id INT PRIMARY KEY,
+    email VARCHAR(100),
+    password VARCHAR(255),
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    birth_date DATE,
+    address TEXT,
+    loyalty_points INT
+);
+
+CREATE TABLE Offers (
+    id INT PRIMARY KEY,
+    start_city VARCHAR(50),
+    end_city VARCHAR(50),
+    start_date DATETIME,
+    end_date DATETIME,
+    category_id INT,
+    price DECIMAL(10, 2),
+    currency_id INT,
+    agency_id INT,
+    FOREIGN KEY (category_id) REFERENCES Categories(id),
+    FOREIGN KEY (currency_id) REFERENCES Currencies(id),
+    FOREIGN KEY (agency_id) REFERENCES Agencies(id)
+);
+
+CREATE TABLE Rentals (
+    id INT PRIMARY KEY,
+    user_id INT,
+    offer_id INT,
+    start_date DATETIME,
+    end_date DATETIME,
+    status VARCHAR(20),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (offer_id) REFERENCES Offers(id)
+);
+
+CREATE TABLE Payments (
+    id INT PRIMARY KEY,
+    rental_id INT,
+    amount DECIMAL(10, 2),
+    currency_id INT,
+    status VARCHAR(20),
+    FOREIGN KEY (rental_id) REFERENCES Rentals(id),
+    FOREIGN KEY (currency_id) REFERENCES Currencies(id)
+);
+
+CREATE TABLE LoyaltyPoints (
+    id INT PRIMARY KEY,
+    user_id INT,
+    points INT,
+    transaction_type VARCHAR(50),
+    transaction_date DATETIME,
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+);
+
+CREATE TABLE Reviews (
+    id INT PRIMARY KEY,
+    user_id INT,
+    car_id INT,
+    rating INT,
+    comment TEXT,
+    review_date DATETIME,
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (car_id) REFERENCES Cars(id)
+);

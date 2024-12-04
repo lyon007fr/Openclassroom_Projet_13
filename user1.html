@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Client Alice</title>
+    <style>
+      .logo {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 100px; /* Ajuste la taille selon tes besoins */
+      }
+  </style>
+    <script>
+        (function(t,a,l,k,j,s){
+        s=a.createElement('script');s.async=1;s.src='https://cdn.talkjs.com/talk.js';a.head.appendChild(s)
+        ;k=t.Promise;t.Talk={v:3,ready:{then:function(f){if(k)return new k(function(r,e){l.push([f,r,e])});l
+        .push([f])},catch:function(){return k&&new k()},c:l}};})(window,document,[]);
+      </script>
+</head>
+<body>
+  <!-- Logo de l'entreprise -->
+  <img src="logo.png" alt="Logo de l'entreprise" class="logo">
+    <h1>Client</h1>
+    <div id="talkjs-container" style="width: 100%; height: 500px"></div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      Talk.ready.then(() => {
+        const currentUser = new Talk.User({
+          id: "user1",
+          name: "Alice",
+          email: "alice@example.com",
+          photoUrl: "https://talkjs.com/new-web/avatar-6.jpg",
+          role: "default",
+        });
+
+        const session = new Talk.Session({
+          appId: "tYSgGqof", // Remplace par ton ID d'application TalkJS
+          me: currentUser,
+        });
+
+        const otherUser = new Talk.User({
+          id: "user2",
+          name: "Service Client",
+          email: "bob@example.com",
+          photoUrl: "https://talkjs.com/new-web/avatar-8.jpg",
+          role: "default",
+        });
+
+        const conversation = session.getOrCreateConversation(
+          Talk.oneOnOneId(currentUser, otherUser)
+        );
+        conversation.setParticipant(currentUser);
+        conversation.setParticipant(otherUser);
+
+        // Afficher la fenêtre de chat
+        const chatbox = session.createChatbox();
+        chatbox.select(conversation);
+        chatbox.mount(document.getElementById("talkjs-container"));
+      });
+    });
+    </script>
+</body>
+</html>
